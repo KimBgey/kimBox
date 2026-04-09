@@ -7,7 +7,7 @@ export default function Home() {
       {/* 01 — HERO */}
       <section id="hero" className="min-h-screen flex items-center relative bg-[var(--bg)]">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h1 className="text-display mb-6">STUDIO</h1>
+          <h1 className="text-display mb-6">kimBox</h1>
           <p className="text-2xl md:text-4xl text-[var(--noir-soft)] max-w-3xl mx-auto">
             Design <span className="text-[var(--rouge)]">×</span> Development
           </p>
