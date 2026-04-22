@@ -1,30 +1,43 @@
 import type { Metadata } from "next";
-import { LenisProvider } from "@/components/providers/LenisProvider";
+import localFont from "next/font/local";
+import { Syne } from "next/font/google";
 import "./globals.css";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import CustomCursor from "@/components/CustomCursor";
+import LenisProvider from "@/components/providers/LenisProvider";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const sunroll = localFont({
+  src: "../public/fonts/Sunroll.ttf",
+  variable: "--font-sunroll",
+  display: "swap",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-syne",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Studio — Design & Development",
-  description: "Double identité : Designer × Développeur. Création d'expériences visuelles et techniques premium.",
-  icons: {
-    icon: "/favicon.ico",
+  title: "André Kim — Designer & Développeur",
+  description: "Studio créatif : design, branding, développement web.",
+  openGraph: {
+    title: "André Kim — Designer & Développeur",
+    description: "Studio créatif : design, branding, développement web.",
+    type: "website",
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
-      <body className="paper-texture overflow-x-hidden">
+    <html lang="fr" className={`${sunroll.variable} ${syne.variable}`}>
+      <body>
+        <div id="grain" aria-hidden="true" />
+        <div id="cursor" aria-hidden="true" />
         <LenisProvider>
           {children}
         </LenisProvider>
+        <CustomCursor />
       </body>
     </html>
   );

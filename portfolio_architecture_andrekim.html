@@ -1,0 +1,283 @@
+
+<style>
+:root { --red: #D43333; --cream: #FFFFFF; --dark: #171717; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: transparent; font-family: var(--font-sans); }
+
+.root { padding: 0 0 2rem; }
+.section-label { font-size: 11px; font-weight: 500; letter-spacing: .12em; color: var(--color-text-tertiary); text-transform: uppercase; margin: 2rem 0 .75rem; padding-left: 2px; }
+
+.page-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+
+.page-card {
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-background-primary);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .2s, transform .15s;
+}
+.page-card:hover { border-color: var(--color-border-primary); transform: translateY(-2px); }
+.page-card.accent { border-color: var(--red); border-width: 1px; }
+
+.card-header {
+  padding: 10px 12px 8px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-red { background: var(--red); }
+.dot-amber { background: #BA7517; }
+.dot-teal { background: #0F6E56; }
+.dot-purple { background: #534AB7; }
+.dot-gray { background: #888780; }
+.dot-blue { background: #185FA5; }
+
+.card-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.card-body { padding: 8px 12px 10px; }
+.feature-list { list-style: none; }
+.feature-list li { font-size: 11px; color: var(--color-text-secondary); padding: 2px 0; display: flex; align-items: flex-start; gap: 5px; line-height: 1.5; }
+.feature-list li::before { content: '—'; color: var(--color-text-tertiary); flex-shrink: 0; font-size: 10px; margin-top: 2px; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.tag { font-size: 10px; padding: 2px 7px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+.tag.hot { background: #FFFFFF; color: #D43333; border-color: #F09595; }
+.tag.cool { background: #FFFFFF; color: #0F6E56; border-color: #5DCAA5; }
+
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+
+.anim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.anim-card {
+  padding: 8px 10px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-secondary);
+}
+.anim-name { font-size: 11px; font-weight: 500; color: var(--color-text-primary); }
+.anim-use { font-size: 10px; color: var(--color-text-tertiary); margin-top: 2px; }
+.anim-tag { font-size: 9px; padding: 1px 5px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+.anim-tag.exp { background: var(--color-background-warning); color: var(--color-text-warning); }
+.anim-tag.solid { background: var(--color-background-success); color: var(--color-text-success); }
+.anim-tag.deep { background: var(--color-background-info); color: var(--color-text-info); }
+
+.brand-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.brand-card { padding: 8px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); text-align: center; }
+.brand-swatch { width: 28px; height: 28px; border-radius: 6px; margin: 0 auto 4px; }
+.brand-label { font-size: 10px; color: var(--color-text-secondary); }
+.brand-value { font-size: 9px; color: var(--color-text-tertiary); margin-top: 1px; }
+
+.social-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: .5rem; }
+.social-pill { font-size: 10px; padding: 3px 9px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+
+.idea-card {
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 10px 14px 12px;
+  background: var(--color-background-primary);
+  margin-bottom: 6px;
+}
+.idea-label { font-size: 10px; font-weight: 500; color: var(--red); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.idea-desc { font-size: 12px; color: var(--color-text-primary); line-height: 1.6; }
+.idea-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.5; }
+</style>
+
+<div class="root">
+
+<div class="section-label">Pages & sections</div>
+
+<div class="page-row">
+  <div class="page-card accent">
+    <div class="card-header"><div class="card-dot dot-red"></div><div class="card-title">01 — Hero / Intro</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Animation d'intro cinématique (texte qui se révèle)</li>
+        <li>Tagline double identité : Design + Dev</li>
+        <li>Curseur custom (croix ou point rouge animé)</li>
+        <li>CTA "Voir les projets" + "Commander"</li>
+        <li>Bruit de fond / texture papier ancien en CSS</li>
+      </ul>
+      <div class="tag-row"><span class="tag hot">GSAP SplitText</span><span class="tag hot">Cursor custom</span><span class="tag">Scroll indicator</span></div>
+    </div>
+  </div>
+
+  <div class="page-card">
+    <div class="card-header"><div class="card-dot dot-amber"></div><div class="card-title">02 — Manifeste / À propos</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Texte long animé au scroll (reveal lettre par lettre)</li>
+        <li>Double portrait : Designer × Développeur</li>
+        <li>Timeline interactive de ton parcours</li>
+        <li>Chiffres clés animés (projets, clients, années)</li>
+      </ul>
+      <div class="tag-row"><span class="tag hot">ScrollTrigger</span><span class="tag">Counter animation</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="page-row">
+  <div class="page-card">
+    <div class="card-header"><div class="card-dot dot-teal"></div><div class="card-title">03 — Projets</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Filtre : Tous / Design / Dev / Les deux</li>
+        <li>Grille asymétrique façon magazine</li>
+        <li>Hover : preview vidéo ou mockup qui s'anime</li>
+        <li>Page détail par projet (étude de cas complète)</li>
+        <li>Lien vers Behance / live site / GitHub</li>
+        <li>Projets taggés par outil (Figma, PS, Next.js…)</li>
+      </ul>
+      <div class="tag-row"><span class="tag hot">Framer Motion</span><span class="tag cool">Locomotive Scroll</span><span class="tag">Masonry grid</span></div>
+    </div>
+  </div>
+
+  <div class="page-card accent">
+    <div class="card-header"><div class="card-dot dot-red"></div><div class="card-title">04 — Services</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Deux pôles clairs avec tarifs ou fourchettes</li>
+        <li>Design : branding, logo, flyer, motion, UI</li>
+        <li>Dev : site vitrine, app web, landing page, API</li>
+        <li>Bundle "Studio" (design + dev ensemble)</li>
+        <li>Bouton → Comeup / WhatsApp / email</li>
+        <li>FAQ intégrée par service</li>
+      </ul>
+      <div class="tag-row"><span class="tag hot">CTA Comeup</span><span class="tag hot">Bundle offre</span><span class="tag cool">Accordion</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="page-row">
+  <div class="page-card">
+    <div class="card-header"><div class="card-dot dot-purple"></div><div class="card-title">05 — Stack & Compétences</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Logos outils animés à l'entrée (marquee ou grid)</li>
+        <li>Design tools : PS, AI, Figma, After Effects…</li>
+        <li>Dev stack : Next.js, React, TypeScript, Node…</li>
+        <li>Barre de maîtrise animée ou jauge créative</li>
+      </ul>
+      <div class="tag-row"><span class="tag">Marquee scroll</span><span class="tag hot">Logo wall</span></div>
+    </div>
+  </div>
+
+  <div class="page-card">
+    <div class="card-header"><div class="card-dot dot-blue"></div><div class="card-title">06 — Contact & Commande</div></div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Formulaire minimaliste (nom, besoin, budget)</li>
+        <li>Sélecteur de type de projet (Design / Dev / Les deux)</li>
+        <li>Liens directs vers toutes les plateformes</li>
+        <li>Status disponibilité (comme Behance "Now")</li>
+        <li>Réseaux sociaux complets</li>
+      </ul>
+      <div class="tag-row"><span class="tag cool">Disponible</span><span class="tag">Formulaire</span></div>
+      <div class="social-row">
+        <span class="social-pill">LinkedIn</span><span class="social-pill">WhatsApp</span><span class="social-pill">Email</span><span class="social-pill">Behance</span><span class="social-pill">Instagram</span><span class="social-pill">Facebook</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Animations — expériences JS à explorer</div>
+<div class="anim-grid">
+  <div class="anim-card">
+    <div class="anim-name">GSAP + ScrollTrigger</div>
+    <div class="anim-use">Reveals, pinning, parallax texte</div>
+    <span class="anim-tag solid">Base solide</span>
+  </div>
+  <div class="anim-card">
+    <div class="anim-name">Framer Motion</div>
+    <div class="anim-use">Transitions de pages, hover projets</div>
+    <span class="anim-tag solid">React natif</span>
+  </div>
+  <div class="anim-card">
+    <div class="anim-name">Three.js / R3F</div>
+    <div class="anim-use">Hero 3D, particules, objet interactif</div>
+    <span class="anim-tag exp">À expérimenter</span>
+  </div>
+  <div class="anim-card">
+    <div class="anim-name">Locomotive Scroll</div>
+    <div class="anim-use">Smooth scroll premium, parallax</div>
+    <span class="anim-tag solid">Expérience fluide</span>
+  </div>
+  <div class="anim-card">
+    <div class="anim-name">Lenis</div>
+    <div class="anim-use">Alternative légère à Locomotive</div>
+    <span class="anim-tag exp">Tendance 2025</span>
+  </div>
+  <div class="anim-card">
+    <div class="anim-name">Canvas / WebGL</div>
+    <div class="anim-use">Shader texture papier animé</div>
+    <span class="anim-tag deep">Deep dive</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Identité visuelle — base</div>
+<div class="brand-row">
+  <div class="brand-card">
+    <div class="brand-swatch" style="background:#D43333; border: 0.5px solid var(--color-border-tertiary)"></div>
+    <div class="brand-label">Rouge primaire</div>
+    <div class="brand-value">#D43333</div>
+  </div>
+  <div class="brand-card">
+    <div class="brand-swatch" style="background:#FFFFFF; border: 0.5px solid var(--color-border-tertiary)"></div>
+    <div class="brand-label">Papier crème</div>
+    <div class="brand-value">#FFFFFF</div>
+  </div>
+  <div class="brand-card">
+    <div class="brand-swatch" style="background:#171717; border: 0.5px solid var(--color-border-tertiary)"></div>
+    <div class="brand-label">Noir chaud</div>
+    <div class="brand-value">#171717</div>
+  </div>
+  <div class="brand-card">
+    <div class="brand-swatch" style="background:#8B7355; border: 0.5px solid var(--color-border-tertiary)"></div>
+    <div class="brand-label">Brun accent</div>
+    <div class="brand-value">#8B7355</div>
+  </div>
+</div>
+<div style="margin-top: 8px; font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; padding: 0 2px;">
+  Polices : <strong style="color:var(--color-text-primary); font-weight:500">Sunroll</strong> (grands titres) · <strong style="color:var(--color-text-primary); font-weight:500">Hagrid Trial</strong> (texte courant) · à compléter avec une mono condensée pour les labels dev
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Idées frappantes & clobbantes</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 01 — Intro "Agence"</div>
+  <div class="idea-desc">Une séquence d'intro plein écran : le mot "STUDIO" se forme lettre par lettre pendant 1,5s, puis explose et révèle le hero en dessous. Comme une boîte de prod qui s'ouvre.</div>
+  <div class="idea-sub">Tech : GSAP SplitText + clip-path reveal. Impression : haut de gamme, mémorable, pas un simple portfolio.</div>
+</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 02 — Curseur "Signature"</div>
+  <div class="idea-desc">Curseur custom rouge qui change de forme selon la zone : cercle vide sur texte, plein sur CTA, croix sur image, et qui laisse une micro-traînée sur fond crème.</div>
+  <div class="idea-sub">Tech : GSAP + mix-blend-mode difference. Effet immédiat sur le visiteur, ça colle parfaitement au style vintage/moderne.</div>
+</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 03 — Section projets "Journal"</div>
+  <div class="idea-desc">Les projets ne sont pas dans une grille classique — ils sont présentés comme des pages d'un vieux journal/magazine. Chaque projet est une "une" avec numéro de parution, titre typographié façon presse.</div>
+  <div class="idea-sub">Renforce l'univers vintage + montre que tu maîtrises la mise en page. Ultra vendeur pour des clients créatifs.</div>
+</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 04 — Services avec "Brief interactif"</div>
+  <div class="idea-desc">Au lieu d'un simple bouton "Commandez", un mini-formulaire conversationnel (3 questions max) qui qualifie le projet et génère un devis estimatif instantané, puis redirige vers Comeup ou WhatsApp avec le résumé du brief en pré-rempli.</div>
+  <div class="idea-sub">Taux de conversion multiplié. Le client arrive sur Comeup avec son brief déjà rédigé. Énorme différenciateur.</div>
+</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 05 — Scroll horizontal "Archives"</div>
+  <div class="idea-desc">Une bande horizontale scrollable façon pellicule cinéma ou strip de magazine qui défile tes meilleurs projets. Interaction au scroll vertical → mouvement horizontal.</div>
+  <div class="idea-sub">Tech : GSAP ScrollTrigger horizontal pin. Visuellement très fort, donne une impression de richesse de portfolio.</div>
+</div>
+
+<div class="idea-card">
+  <div class="idea-label">💡 Idée 06 — Background texture vivant</div>
+  <div class="idea-desc">Le fond papier crème n'est pas statique : il a un très léger bruit animé (grain cinématique) et des micro-taches/veines qui bougent lentement, comme un vieux parchemin qui respire.</div>
+  <div class="idea-sub">Tech : Canvas 2D ou shader WebGL. Subtil mais ultra mémorable. Personne d'autre ne l'a dans ton domaine.</div>
+</div>
+
+</div>
