@@ -36,9 +36,10 @@ export default function AboutSection() {
           start: "top 85%",
           once: true,
           onEnter: () => {
-            gsap.to({ val: 0 }, {
+            const obj = { val: 0 };
+            gsap.to(obj, {
               val: target, duration: 1.6, ease: "power2.out",
-              onUpdate() { el.textContent = Math.round((this as gsap.core.Tween).targets()[0].val) + (el.dataset.suffix ?? ""); },
+              onUpdate() { el.textContent = Math.round(obj.val) + (el.dataset.suffix ?? ""); },
             });
           },
         });
