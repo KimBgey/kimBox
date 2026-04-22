@@ -53,7 +53,6 @@ export default function ProjectsSection({ projects = PLACEHOLDER_PROJECTS }: { p
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 md:mb-14">
         <div>
-          <p className="section-label mb-3">03 — Projets</p>
           <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)]">
             Travaux récents
           </h2>

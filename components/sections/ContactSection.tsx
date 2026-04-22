@@ -35,7 +35,6 @@ export default function ContactSection({ available = true }: { available?: boole
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
         <div>
-          <p className="section-label mb-3">06 — Contact</p>
           <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)]">
             Travaillons ensemble
           </h2>

@@ -75,7 +75,7 @@ export default function ServicesSection({ comeupUrl = "", dbServices }: { comeup
   return (
     <section id="services" className="bg-[#F2F0EC] py-24 md:py-32 px-5 md:px-10 lg:px-20">
 
-      <p className="section-label mb-3">04 — Services</p>
+
       <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)] mb-14 md:mb-20">
         Ce que je fais
       </h2>

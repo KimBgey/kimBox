@@ -61,7 +61,7 @@ export default function AboutSection() {
     <section ref={sectionRef} id="about" className="bg-[var(--color-dark)] text-white py-24 md:py-32 px-5 md:px-10 lg:px-20 overflow-hidden">
 
       {/* Label */}
-      <p className="section-label text-white/40 mb-8 md:mb-12">02 — À propos</p>
+      <p className="section-label text-white/40 mb-8 md:mb-12">À propos</p>
 
       {/* Manifeste */}
       <div className="manifeste-block mb-16 md:mb-24 max-w-4xl">

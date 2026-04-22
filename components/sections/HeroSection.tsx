@@ -41,8 +41,11 @@ export default function HeroSection() {
           {/* Hello pill */}
           <div className="hero-reveal relative inline-flex">
             <span className="inline-flex items-center px-5 py-1.5 rounded-full border border-[var(--color-dark)] text-sm font-medium tracking-wide">
-              Hello!
+              Designer &amp; Developer
             </span>
+{/*             <h2 className="font-body text-[clamp(1.25rem,1.5vw,2.5rem)] font-semibold leading-[1.1] text-[var(--color-dark)] mt-2 m-0 tracking-[-0.01em]">
+              Designer &amp; Developer
+            </h2> */}
             <svg width="34" height="26" viewBox="0 0 36 28" fill="none" className="absolute -top-3 -right-7 rotate-[15deg]">
               <path d="M4 24 C8 16, 16 8, 28 4" stroke="var(--color-red)" strokeWidth="2" strokeLinecap="round"/>
               <path d="M22 2 L28 4 L24 10" stroke="var(--color-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -54,9 +57,7 @@ export default function HeroSection() {
             <h1 className="font-display text-[clamp(3rem,4vw,6rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)] m-0">
               I&apos;m <span className="text-[var(--color-red)]">André Kim,</span>
             </h1>
-            <h2 className="font-body text-[clamp(1.25rem,1.5vw,2.5rem)] font-semibold leading-[1.1] text-[var(--color-dark)] mt-2 m-0 tracking-[-0.01em]">
-              Designer &amp; Developer
-            </h2>
+
           </div>
 
           {/* Scribble déco */}
@@ -77,7 +78,7 @@ export default function HeroSection() {
             ))}
           </div>
           <div className="font-display text-[clamp(2rem,3vw,2.75rem)] leading-none text-[var(--color-dark)]">
-            10 Years
+             +3 Years
           </div>
           <div className="text-sm text-[#888] tracking-widest uppercase text-[0.7rem]">Experience</div>
         </aside>

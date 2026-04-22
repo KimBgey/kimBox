@@ -16,7 +16,6 @@ export default function StackSection() {
   return (
     <section id="stack" className="bg-[var(--color-dark)] py-24 md:py-32 overflow-hidden">
       <div className="px-5 md:px-10 lg:px-20 mb-12 md:mb-16">
-        <p className="section-label text-white/40 mb-3">05 — Stack</p>
         <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-white">
           Mes outils
         </h2>
