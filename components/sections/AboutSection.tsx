@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 const stats = [
   { value: "50+", label: "Projets livrés" },
   { value: "30+", label: "Clients satisfaits" },
-  { value: "10", label: "Années d'expérience" },
+  { value: "3+", label: "Années d'expérience" },
 ];
 
 const designSkills = ["UI / UX Design", "Branding & Logo", "Motion Design", "Maquettage Figma", "Photoshop / Illustrator", "After Effects"];
@@ -83,7 +83,7 @@ export default function AboutSection() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 md:gap-8 mb-16 md:mb-24 border-t border-white/10 pt-8 md:pt-12">
+      <div className="grid grid-cols-3 gap-4 md:gap-8 mb-16 md:mb-24 border-t border-white/10 pt-8 md:pt-12 text-center">
         {stats.map(({ value, label }) => {
           const num = parseInt(value);
           const suffix = value.replace(String(num), "");
@@ -96,6 +96,16 @@ export default function AboutSection() {
             </div>
           );
         })}
+      </div>
+
+              {/* CTA Resume */}
+      <div className="about-reveal mb-16 md:mb-24 text-center">
+        <a href="/resume" className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full border border-white/20 text-white text-sm font-medium no-underline hover:bg-white hover:text-[var(--color-dark)] transition-colors duration-300 group">
+          Tout savoir sur moi
+          <svg width="14" height="14" viewBox="0 0 13 13" fill="none" className="group-hover:translate-x-0.5 transition-transform">
+            <path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </a>
       </div>
 
       {/* Double identité */}
@@ -132,6 +142,7 @@ export default function AboutSection() {
           </ul>
         </div>
       </div>
+      
     </section>
   );
 }

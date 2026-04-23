@@ -19,11 +19,19 @@ interface Props {
 }
 
 export default function HomeClient({ dbProjects, dbServices, comeupUrl }: Props) {
-  const [introDone, setIntroDone] = useState(false);
+  const [introDone, setIntroDone] = useState(() => {
+    if (typeof window !== "undefined") return !!sessionStorage.getItem("introSeen");
+    return false;
+  });
+
+  const handleIntroComplete = () => {
+    sessionStorage.setItem("introSeen", "1");
+    setIntroDone(true);
+  };
 
   return (
     <>
-      <HeroIntro onComplete={() => setIntroDone(true)} />
+      {!introDone && <HeroIntro onComplete={handleIntroComplete} />}
       <div
         className={`transition-opacity duration-700 ${introDone ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       >
