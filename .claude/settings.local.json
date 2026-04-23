@@ -12,7 +12,10 @@
       "Bash(taskkill /PID 13140 /F)",
       "Bash(curl -s http://localhost:3001 -o /dev/null -w \"%{http_code}\")",
       "Bash(node -e ' *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(cp \"d:/Projets/kimBox/app/admin/projects/[id]/edit/page.tsx\" \"d:/Projets/kimBox/app/admin/\\(dashboard\\)/projects/[id]/edit/page.tsx\")",
+      "Bash(cp \"d:/Projets/kimBox/app/admin/services/[id]/edit/page.tsx\" \"d:/Projets/kimBox/app/admin/\\(dashboard\\)/services/[id]/edit/page.tsx\")",
+      "Bash(cp \"d:/Projets/kimBox/app/admin/testimonials/[id]/edit/page.tsx\" \"d:/Projets/kimBox/app/admin/\\(dashboard\\)/testimonials/[id]/edit/page.tsx\")"
     ]
   }
 }
