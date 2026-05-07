@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeroIntro from "@/components/sections/HeroIntro";
 import Nav from "@/components/Nav";
 import HeroSection from "@/components/sections/HeroSection";
@@ -19,10 +19,12 @@ interface Props {
 }
 
 export default function HomeClient({ dbProjects, dbServices, comeupUrl }: Props) {
-  const [introDone, setIntroDone] = useState(() => {
-    if (typeof window !== "undefined") return !!sessionStorage.getItem("introSeen");
-    return false;
-  });
+  const [introDone, setIntroDone] = useState(false);
+
+  // Vérifie sessionStorage après montage (évite la divergence SSR/client)
+  useEffect(() => {
+    if (sessionStorage.getItem("introSeen")) setIntroDone(true);
+  }, []);
 
   const handleIntroComplete = () => {
     sessionStorage.setItem("introSeen", "1");

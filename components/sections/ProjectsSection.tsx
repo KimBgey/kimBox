@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Image from "next/image";
 import type { Project } from "@/lib/db/schema";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -85,10 +86,22 @@ export default function ProjectsSection({ projects = PLACEHOLDER_PROJECTS }: { p
             className={`project-card group relative rounded-2xl overflow-hidden no-underline ${CARD_SIZES[i % CARD_SIZES.length]}`}
           >
             {/* Background */}
-            <div
-              className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
-              style={{ backgroundColor: CARD_COLORS[i % CARD_COLORS.length] }}
-            />
+            <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
+              style={{ backgroundColor: CARD_COLORS[i % CARD_COLORS.length] }}>
+              {(project.images as string[])?.[0] && (
+                <Image
+                  src={(project.images as string[])[0]}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              )}
+            </div>
+            {/* Overlay sombre pour lisibilité quand image présente */}
+            {(project.images as string[])?.[0] && (
+              <div className="absolute inset-0 bg-black/40" />
+            )}
 
             {/* Numéro de parution */}
             <span className="absolute top-4 left-5 section-label text-white/30">

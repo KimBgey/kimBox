@@ -3,6 +3,7 @@ import { projects } from "@/lib/db/schema";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -46,7 +47,20 @@ export default async function ProjectsPage() {
                 <div
                   className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
                   style={{ backgroundColor: CARD_COLORS[i % CARD_COLORS.length] }}
-                />
+                >
+                  {(project.images as string[])?.[0] && (
+                    <Image
+                      src={(project.images as string[])[0]}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  )}
+                </div>
+                {(project.images as string[])?.[0] && (
+                  <div className="absolute inset-0 bg-black/40" />
+                )}
                 <span className="absolute top-4 left-5 section-label text-white/30">
                   N°{String(i + 1).padStart(2, "0")}
                 </span>

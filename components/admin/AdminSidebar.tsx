@@ -45,9 +45,9 @@ export default function AdminSidebar() {
   return (
     <>
       {/* ── Desktop sidebar ─────────────────────────────── */}
-      <aside className="hidden lg:flex w-[220px] min-h-screen shrink-0 flex-col bg-[var(--color-dark)] px-5 py-8">
+      <aside className="hidden lg:flex w-[220px] shrink-0 flex-col bg-[var(--color-dark)] px-5 py-8 sticky top-0 h-screen overflow-y-auto">
         <Link href="/admin" className="no-underline block">
-          <Image src="/images/Fichier 4.png" alt="André Kim" width={32} height={32} className="object-contain opacity-80" />
+          <Image src="/images/Fichier 2.png" alt="André Kim" width={32} height={32} className="object-contain opacity-80" />
           <div className="text-[0.65rem] text-[#666] tracking-[0.1em] uppercase mt-1.5">Admin</div>
         </Link>
 

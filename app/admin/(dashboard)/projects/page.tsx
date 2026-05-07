@@ -2,76 +2,68 @@ import { db } from "@/lib/db";
 import { projects } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 import Link from "next/link";
+import DeleteButton from "@/components/admin/DeleteButton";
+
+const CATEGORY_LABEL: Record<string, string> = {
+  design: "Design",
+  dev: "Dev",
+  both: "Design + Dev",
+};
 
 export default async function AdminProjects() {
   const allProjects = await db.select().from(projects).orderBy(desc(projects.createdAt));
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "1.75rem" }}>Projets</h1>
-        <Link
-          href="/admin/projects/new"
-          style={{
-            padding: "0.5rem 1.25rem",
-            backgroundColor: "var(--color-red)",
-            color: "#fff",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontSize: "0.875rem",
-            fontWeight: 500,
-          }}
-        >
-          + Nouveau
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="font-display text-3xl md:text-4xl text-[var(--color-dark)]">Projets</h1>
+          <p className="text-[0.8125rem] text-[#999] mt-1">{allProjects.length} projet{allProjects.length !== 1 ? "s" : ""}</p>
+        </div>
+        <Link href="/admin/projects/new" className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--color-dark)] text-white text-sm font-semibold no-underline hover:opacity-80 transition-opacity">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nouveau projet
         </Link>
       </div>
 
       {allProjects.length === 0 ? (
-        <div style={{ padding: "3rem", textAlign: "center", color: "#888", backgroundColor: "#fff", borderRadius: "12px", border: "1px solid #e8e6e1" }}>
-          Aucun projet pour l&#39;instant.{" "}
-          <Link href="/admin/projects/new" style={{ color: "var(--color-red)" }}>
-            Créer le premier
-          </Link>
+        <div className="py-16 text-center bg-white rounded-2xl border border-black/[0.06]">
+          <p className="text-[#bbb] text-sm mb-3">Aucun projet pour l&apos;instant.</p>
+          <Link href="/admin/projects/new" className="text-sm text-[var(--color-red)] no-underline hover:opacity-70">Créer le premier →</Link>
         </div>
       ) : (
-        <div style={{ backgroundColor: "#fff", borderRadius: "12px", border: "1px solid #e8e6e1", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden">
+          <table className="w-full border-collapse">
             <thead>
-              <tr style={{ borderBottom: "1px solid #e8e6e1" }}>
+              <tr className="border-b border-black/[0.06]">
                 {["Titre", "Catégorie", "Mis en avant", "Actions"].map((h) => (
-                  <th key={h} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "0.75rem", color: "#888", fontWeight: 500 }}>
-                    {h}
-                  </th>
+                  <th key={h} className="px-5 py-3.5 text-left text-[0.7rem] font-semibold text-[#bbb] uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {allProjects.map((project) => (
-                <tr key={project.id} style={{ borderBottom: "1px solid #f0ede8" }}>
-                  <td style={{ padding: "0.875rem 1rem", fontSize: "0.875rem", fontWeight: 500 }}>
-                    {project.title}
-                  </td>
-                  <td style={{ padding: "0.875rem 1rem" }}>
-                    <span style={{
-                      fontSize: "0.75rem",
-                      padding: "0.2rem 0.6rem",
-                      borderRadius: "999px",
-                      backgroundColor: "#f0ede8",
-                      color: "#555",
-                    }}>
-                      {project.category}
+                <tr key={project.id} className="border-b border-black/[0.04] last:border-0 hover:bg-[#fafafa] transition-colors group">
+                  <td className="px-5 py-4 text-sm font-medium text-[var(--color-dark)]">{project.title}</td>
+                  <td className="px-5 py-4">
+                    <span className="text-[0.72rem] px-2.5 py-1 rounded-full bg-black/[0.05] text-[#666]">
+                      {CATEGORY_LABEL[project.category] ?? project.category}
                     </span>
                   </td>
-                  <td style={{ padding: "0.875rem 1rem", fontSize: "0.875rem", color: project.featured ? "var(--color-red)" : "#ccc" }}>
-                    {project.featured ? "Oui" : "—"}
+                  <td className="px-5 py-4">
+                    {project.featured ? (
+                      <span className="text-[0.72rem] px-2.5 py-1 rounded-full bg-[var(--color-red)]/10 text-[var(--color-red)]">Oui</span>
+                    ) : (
+                      <span className="text-[#ccc] text-sm">—</span>
+                    )}
                   </td>
-                  <td style={{ padding: "0.875rem 1rem" }}>
-                    <Link
-                      href={`/admin/projects/${project.id}/edit`}
-                      style={{ fontSize: "0.8125rem", color: "var(--color-dark)", textDecoration: "none", marginRight: "1rem" }}
-                    >
-                      Modifier
-                    </Link>
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-4">
+                      <Link href={`/admin/projects/${project.id}/edit`} className="text-[0.8125rem] text-[var(--color-dark)] no-underline hover:text-[var(--color-red)] transition-colors">
+                        Modifier
+                      </Link>
+                      <DeleteButton id={project.id} type="project" name={project.title} />
+                    </div>
                   </td>
                 </tr>
               ))}

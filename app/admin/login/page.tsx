@@ -5,30 +5,18 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function LoginPage() {
-  const router   = useRouter();
-  const [revealed, setRevealed] = useState(false);
-  const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
-  const [error,    setError]    = useState("");
-  const [loading,  setLoading]  = useState(false);
+interface LoginFormProps {
+  email: string;
+  setEmail: (v: string) => void;
+  password: string;
+  setPassword: (v: string) => void;
+  error: string;
+  loading: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+}
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    const result = await signIn("credentials", { email: email.trim(), password, redirect: false });
-    if (result?.error) {
-      setError("Email ou mot de passe incorrect.");
-      setLoading(false);
-    } else {
-      router.push("/admin");
-      router.refresh();
-    }
-  }
-
-  /* ── Form content (partagé mobile/desktop) ──────────────── */
-  const FormContent = () => (
+function LoginForm({ email, setEmail, password, setPassword, error, loading, onSubmit }: LoginFormProps) {
+  return (
     <div className="w-full max-w-[360px] mx-auto">
       <div className="flex items-center gap-3 mb-10">
         <Image src="/images/Fichier 1.png" alt="André Kim" width={34} height={34} className="object-contain" />
@@ -45,7 +33,7 @@ export default function LoginPage() {
       </h2>
       <p className="text-[0.82rem] text-[#999] mb-7">Accès réservé à André Kim.</p>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="section-label">Email</label>
           <input
@@ -85,6 +73,29 @@ export default function LoginPage() {
       </p>
     </div>
   );
+}
+
+export default function LoginPage() {
+  const router   = useRouter();
+  const [revealed, setRevealed] = useState(false);
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [error,    setError]    = useState("");
+  const [loading,  setLoading]  = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const result = await signIn("credentials", { email: email.trim(), password, redirect: false });
+    if (result?.error) {
+      setError("Email ou mot de passe incorrect.");
+      setLoading(false);
+    } else {
+      router.push("/admin");
+      router.refresh();
+    }
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden [cursor:auto]">
@@ -142,7 +153,7 @@ export default function LoginPage() {
       <div
         className={`hidden lg:flex absolute inset-y-0 left-0 w-[54%] bg-[var(--color-cream)] flex-col justify-center px-14 xl:px-20 py-12 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${revealed ? "translate-x-0 opacity-100 pointer-events-auto" : "-translate-x-full opacity-0 pointer-events-none"}`}
       >
-        <FormContent />
+        <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} error={error} loading={loading} onSubmit={handleSubmit} />
       </div>
 
       {/* Mobile bottom sheet */}
@@ -151,7 +162,7 @@ export default function LoginPage() {
       >
         {/* Handle bar */}
         <div className="w-10 h-1 rounded-full bg-black/15 mx-auto mb-8" />
-        <FormContent />
+        <LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} error={error} loading={loading} onSubmit={handleSubmit} />
       </div>
 
       {/* Overlay mobile (ferme la sheet si on clique en dehors) */}

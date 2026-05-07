@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import Image from "next/image";
+import ImageGallery from "@/components/ImageGallery";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -60,16 +60,11 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div className="lg:grid lg:grid-cols-[1fr_360px] min-h-[70vh]">
 
           {/* ── Gauche : visuels ────────────────────────────────── */}
-          <div className="bg-[#111] px-5 md:px-10 py-12 flex flex-col gap-6">
+          <div className="bg-[#111] px-5 md:px-10 py-12">
             {images.length > 0 ? (
-              images.map((src, i) => (
-                <div key={i} className="relative w-full rounded-xl overflow-hidden aspect-video">
-                  <Image src={src} alt={`${project.title} — visuel ${i + 1}`} fill className="object-cover" />
-                </div>
-              ))
+              <ImageGallery images={images} title={project.title} />
             ) : (
-              /* Placeholder Behance-style */
-              <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+              <div className="flex items-center justify-center min-h-[50vh]">
                 <div className="text-center">
                   <span className="font-display text-[clamp(3rem,8vw,7rem)] text-white/[0.06] leading-none block">
                     {project.title}

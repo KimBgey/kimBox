@@ -5,7 +5,7 @@ import HomeClient from "@/components/HomeClient";
 
 export default async function Home() {
   const [dbProjects, dbServices, dbSettings] = await Promise.all([
-    db.select().from(projects).orderBy(projects.order, desc(projects.createdAt)),
+    db.select().from(projects).orderBy(projects.order, desc(projects.createdAt)).limit(3),
     db.select().from(services).orderBy(services.order),
     db.select().from(settings),
   ]);
