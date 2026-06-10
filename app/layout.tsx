@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Syne } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
 import LenisProvider from "@/components/providers/LenisProvider";
 
 const sunroll = localFont({
@@ -32,12 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${sunroll.variable} ${syne.variable}`}>
       <body>
-        <div id="grain" aria-hidden="true" />
-        <div id="cursor" aria-hidden="true" />
         <LenisProvider>
           {children}
         </LenisProvider>
-        <CustomCursor />
       </body>
     </html>
   );

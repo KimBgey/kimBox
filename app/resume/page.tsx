@@ -25,11 +25,12 @@ const experiences = [
     current: true,
   },
   {
-    period: "10/2025 – 03/2026",
-    company: "Rivael Système",
-    location: "Abomey Calavi (Remote)",
-    role: "Web Designer — Stage",
-    desc: "Conception de maquettes web & mobile et création d'identités de marque. Stage en remote.",
+    period: "01/2022 – Aujourd'hui",
+    company: "Freelance",
+    location: "Abomey Calavi",
+    role: "Designer Graphiste",
+    desc: "Réalisation d'affiches publicitaires et d'identités visuelles pour sites web.",
+    current: true,
   },
   {
     period: "02/2026 – 03/2026",
@@ -37,6 +38,13 @@ const experiences = [
     location: "Cotonou",
     role: "Web Designer",
     desc: "Réalisation de maquettes web et mobile et mise en place d'identités visuelles.",
+  },
+  {
+    period: "10/2025 – 03/2026",
+    company: "Rivael Système",
+    location: "Abomey Calavi (Remote)",
+    role: "Web Designer — Stage",
+    desc: "Conception de maquettes web & mobile et création d'identités de marque.",
   },
   {
     period: "12/2024 – 07/2025",
@@ -50,15 +58,7 @@ const experiences = [
     company: "TPAPY Educational Consulting Center",
     location: "Porto Novo",
     role: "Développeur Web — Stage Académique",
-    desc: "Réalisation d'une application web de gestion de projets collaboratifs pour optimiser la planification et le suivi des tâches en équipe.",
-  },
-  {
-    period: "01/2022 – Aujourd'hui",
-    company: "À mon propre compte",
-    location: "Abomey Calavi",
-    role: "Designer Graphiste Freelance",
-    desc: "Réalisation d'affiches publicitaires et d'identités visuelles pour sites web.",
-    current: true,
+    desc: "Réalisation d'une application web de gestion de projets collaboratifs pour optimiser la planification et le suivi des tâches.",
   },
 ];
 
@@ -99,9 +99,8 @@ const skills = [
   { label: "Next.js / React", level: 3 },
   { label: "JavaScript / TypeScript", level: 3 },
   { label: "NestJS / VueJS", level: 3 },
-  { label: "Word / SourceTree", level: 4 },
-  { label: "PowerPoint / Excel", level: 3 },
   { label: "Premiere Pro / CapCut", level: 2 },
+  { label: "PowerPoint / Excel", level: 4 },
 ];
 
 const languages = [
@@ -111,89 +110,144 @@ const languages = [
   { label: "Anglais", level: 2 },
 ];
 
-function Dots({ level }: { level: number }) {
+const LEVEL_WIDTH = ["w-0", "w-1/5", "w-2/5", "w-3/5", "w-4/5", "w-full"];
+const LEVEL_LABEL = ["", "Débutant", "Notions", "Avancé", "Expert", "Natif"];
+
+function SkillBar({ label, level }: { label: string; level: number }) {
   return (
-    <div className="flex gap-1 mt-1">
-      {[1, 2, 3, 4, 5].map(i => (
-        <span key={i} className={`w-2 h-2 rounded-full ${i <= level ? "bg-[var(--color-red)]" : "bg-black/10"}`} />
-      ))}
+    <div className="group">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[0.82rem] font-medium text-[var(--color-dark)]">{label}</span>
+        <span className="font-mono text-[0.6rem] uppercase tracking-wider text-[#ccc] group-hover:text-[var(--color-red)] transition-colors">
+          {LEVEL_LABEL[level]}
+        </span>
+      </div>
+      <div className="h-[3px] bg-black/[0.07] rounded-full overflow-hidden">
+        <div className={`h-full bg-[var(--color-red)] rounded-full transition-all ${LEVEL_WIDTH[level]}`} />
+      </div>
     </div>
   );
 }
 
 export default function ResumePage() {
+  const currentXps = experiences.filter(x => x.current);
+  const pastXps = experiences.filter(x => !x.current);
+
   return (
     <>
       <Nav />
       <main className="bg-[var(--color-cream)] min-h-screen">
 
-        {/* ── Hero ────────────────────────────────────────────── */}
-        <div className="bg-[var(--color-dark)] pt-32 pb-20 px-5 md:px-10 lg:px-20">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div>
-              <p className="section-label text-white/30 mb-4">Curriculum Vitae</p>
-              <h1 className="font-display text-[clamp(3rem,7vw,6rem)] leading-[0.95] tracking-[-0.02em] text-white mb-3">
-                André Kim<span className="text-[var(--color-red)]">.</span>
-              </h1>
-              <p className="text-white/50 text-lg font-medium">Développeur Web &amp; Web Designer</p>
-              <div className="flex flex-wrap gap-4 mt-5 text-[0.8rem] text-white/30">
+        {/* ── Hero ── */}
+        <div className="bg-[var(--color-dark)] pt-28 pb-16 px-5 md:px-10 lg:px-20">
+          <div className="max-w-5xl mx-auto">
+
+            {/* Top row */}
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-10">
+              <div>
+                <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-white/25 mb-4">
+                  Curriculum Vitae
+                </p>
+                <h1 className="font-display text-[clamp(2.8rem,5vw,4.5rem)] leading-[0.95] tracking-[-0.025em] text-white mb-2">
+                  André Kim<span className="text-[var(--color-red)]">.</span>
+                </h1>
+                <p className="text-white/40 text-[0.95rem] font-medium">
+                  Développeur Web &amp; Web Designer
+                </p>
+              </div>
+
+              <a
+                href="/cv/André_Kim_GBAGUIDI.pdf"
+                download
+                className="inline-flex items-center gap-2.5 self-start px-6 py-3 rounded-full bg-[var(--color-red)] text-white text-sm font-semibold no-underline hover:opacity-90 transition-opacity shrink-0"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Télécharger le CV
+              </a>
+            </div>
+
+            {/* Profil */}
+            <div className="border-t border-white/[0.07] pt-8 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-end">
+              <p className="text-white/50 text-[0.9rem] leading-relaxed max-w-xl">
+                Designer et développeur web avec 3+ ans d&apos;expérience, basé à Abomey-Calavi, Bénin.
+                Je transforme des idées en interfaces digitales soignées — de la maquette Figma au site en production.
+              </p>
+              <div className="flex flex-wrap gap-3 text-[0.75rem] text-white/25 font-mono">
                 <span>andrekimgbaguidi01@gmail.com</span>
-                <span className="hidden md:inline text-white/10">·</span>
+                <span className="hidden md:inline">·</span>
                 <span>+229 0166337219</span>
-                <span className="hidden md:inline text-white/10">·</span>
-                <span>Abomey Calavi, Bénin</span>
               </div>
             </div>
-            <a
-              href="/cv/André_Kim_GBAGUIDI.pdf"
-              download
-              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[var(--color-red)] text-white text-sm font-semibold no-underline hover:opacity-90 transition-opacity shrink-0"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Télécharger le CV
-            </a>
+
           </div>
         </div>
 
-        {/* ── Corps ───────────────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto px-5 md:px-10 lg:px-20 py-20 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-14 lg:gap-20">
+        {/* ── Corps ── */}
+        <div className="max-w-5xl mx-auto px-5 md:px-10 lg:px-20 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-14 lg:gap-16">
 
-          {/* ── Colonne principale ─────────────────────────── */}
-          <div className="space-y-20">
+          {/* ── Colonne principale ── */}
+          <div className="space-y-16">
 
-            {/* Expériences */}
-            <section>
-              <p className="section-label mb-10">Expérience Professionnelle</p>
-              <div className="relative">
-                {/* Ligne verticale */}
-                <div className="absolute left-0 top-2 bottom-0 w-px bg-black/10 hidden md:block" />
-
-                <div className="space-y-10">
-                  {experiences.map((xp, i) => (
-                    <div key={i} className="md:pl-8 relative">
-                      {/* Dot sur la ligne */}
-                      <div className="hidden md:block absolute left-0 top-2 w-2 h-2 rounded-full -translate-x-[3.5px] border-2 border-[var(--color-red)] bg-[var(--color-cream)]" />
-
-                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-1 mb-2">
+            {/* Postes en cours */}
+            {currentXps.length > 0 && (
+              <section>
+                <div className="flex items-center gap-3 mb-8">
+                  <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40">
+                    En cours
+                  </p>
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                </div>
+                <div className="space-y-6">
+                  {currentXps.map((xp, i) => (
+                    <div key={i} className="rounded-2xl border border-[var(--color-dark)]/[0.07] bg-white p-5 md:p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
                         <div>
                           <h3 className="font-semibold text-[var(--color-dark)] text-[0.95rem] leading-tight">
                             {xp.company}
-                            {xp.current && (
-                              <span className="ml-2 text-[0.65rem] px-2 py-0.5 rounded-full bg-[var(--color-red)]/10 text-[var(--color-red)] font-medium align-middle">
-                                En cours
-                              </span>
-                            )}
                           </h3>
                           <p className="text-[var(--color-red)] text-[0.8rem] font-medium mt-0.5">{xp.role}</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-[0.75rem] text-[#888] whitespace-nowrap">{xp.period}</p>
-                          <p className="text-[0.7rem] text-[#aaa]">{xp.location}</p>
+                          <p className="text-[0.72rem] text-[#aaa] whitespace-nowrap font-mono">{xp.period}</p>
+                          <p className="text-[0.68rem] text-[#ccc]">{xp.location}</p>
                         </div>
                       </div>
-                      {xp.desc && <p className="text-[0.85rem] text-[#666] leading-relaxed">{xp.desc}</p>}
+                      {xp.desc && <p className="text-[0.83rem] text-[#777] leading-relaxed">{xp.desc}</p>}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Expériences passées */}
+            <section>
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-8">
+                Expériences passées
+              </p>
+
+              <div className="relative">
+                <div className="absolute left-0 top-2 bottom-0 w-px bg-black/[0.07] hidden md:block" />
+                <div className="space-y-8">
+                  {pastXps.map((xp, i) => (
+                    <div key={i} className="md:pl-8 relative">
+                      <div className="hidden md:block absolute left-0 top-2 w-2 h-2 rounded-full -translate-x-[3.5px] border-2 border-[var(--color-dark)]/20 bg-[var(--color-cream)]" />
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 mb-2">
+                        <div>
+                          <h3 className="font-semibold text-[var(--color-dark)] text-[0.9rem] leading-tight">
+                            {xp.company}
+                          </h3>
+                          <p className="text-[var(--color-red)] text-[0.78rem] font-medium mt-0.5">{xp.role}</p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-[0.72rem] text-[#aaa] whitespace-nowrap font-mono">{xp.period}</p>
+                          <p className="text-[0.68rem] text-[#ccc]">{xp.location}</p>
+                        </div>
+                      </div>
+                      {xp.desc && <p className="text-[0.82rem] text-[#888] leading-relaxed">{xp.desc}</p>}
                     </div>
                   ))}
                 </div>
@@ -202,18 +256,20 @@ export default function ResumePage() {
 
             {/* Formations */}
             <section>
-              <p className="section-label mb-10">Formations</p>
-              <div className="space-y-8">
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-8">
+                Formation
+              </p>
+              <div className="space-y-6">
                 {formations.map((f, i) => (
-                  <div key={i} className="flex flex-col md:flex-row md:items-start justify-between gap-1 pb-8 border-b border-black/[0.06] last:border-none last:pb-0">
+                  <div key={i} className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 pb-6 border-b border-black/[0.05] last:border-none last:pb-0">
                     <div>
-                      <h3 className="font-semibold text-[var(--color-dark)] text-[0.95rem]">{f.degree}</h3>
-                      <p className="text-[0.82rem] text-[#666] mt-0.5">{f.school}</p>
-                      {f.desc && <p className="text-[0.8rem] text-[#999] mt-1 leading-relaxed italic">{f.desc}</p>}
+                      <h3 className="font-semibold text-[var(--color-dark)] text-[0.9rem] leading-tight">{f.degree}</h3>
+                      <p className="text-[0.8rem] text-[#888] mt-0.5">{f.school}</p>
+                      {f.desc && <p className="text-[0.78rem] text-[#aaa] mt-1 leading-relaxed">{f.desc}</p>}
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-[0.75rem] text-[#888] whitespace-nowrap">{f.period}</p>
-                      <p className="text-[0.7rem] text-[#aaa]">{f.location}</p>
+                      <p className="text-[0.72rem] text-[#aaa] whitespace-nowrap font-mono">{f.period}</p>
+                      <p className="text-[0.68rem] text-[#ccc]">{f.location}</p>
                     </div>
                   </div>
                 ))}
@@ -222,73 +278,62 @@ export default function ResumePage() {
 
           </div>
 
-          {/* ── Sidebar ────────────────────────────────────────── */}
-          <aside className="space-y-12 lg:border-l lg:border-black/[0.06] lg:pl-12">
+          {/* ── Sidebar ── */}
+          <aside className="space-y-10 lg:border-l lg:border-black/[0.06] lg:pl-10">
 
             {/* Compétences */}
             <section>
-              <p className="section-label mb-6">Compétences</p>
-              <div className="space-y-4">
-                {skills.map(s => (
-                  <div key={s.label}>
-                    <p className="text-[0.82rem] text-[var(--color-dark)] font-medium mb-1">{s.label}</p>
-                    <Dots level={s.level} />
-                  </div>
-                ))}
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-6">
+                Compétences
+              </p>
+              <div className="space-y-5">
+                {skills.map(s => <SkillBar key={s.label} label={s.label} level={s.level} />)}
               </div>
             </section>
 
             {/* Langues */}
             <section>
-              <p className="section-label mb-6">Langues</p>
-              <div className="space-y-4">
-                {languages.map(l => (
-                  <div key={l.label}>
-                    <p className="text-[0.82rem] text-[var(--color-dark)] font-medium mb-1">{l.label}</p>
-                    <Dots level={l.level} />
-                  </div>
-                ))}
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-6">
+                Langues
+              </p>
+              <div className="space-y-5">
+                {languages.map(l => <SkillBar key={l.label} label={l.label} level={l.level} />)}
               </div>
             </section>
 
             {/* Certification */}
             <section>
-              <p className="section-label mb-6">Certification</p>
-              <div className="rounded-xl border border-black/[0.07] p-4 bg-white">
-                <p className="font-semibold text-[var(--color-dark)] text-[0.875rem]">Figma</p>
-                <p className="text-[0.75rem] text-[#888] mt-1 leading-relaxed">
-                  Outil collaboratif de design et prototypage d&apos;interfaces.
-                  <br />Formation suivie sur Dyma.
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-5">
+                Certification
+              </p>
+              <div className="rounded-xl border border-black/[0.07] bg-white p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-semibold text-[var(--color-dark)] text-[0.875rem]">Figma</p>
+                  <span className="text-[0.6rem] font-mono text-[var(--color-red)] uppercase tracking-widest">Dyma</span>
+                </div>
+                <p className="text-[0.75rem] text-[#aaa] leading-relaxed">
+                  Design d&apos;interfaces et prototypage collaboratif.
                 </p>
               </div>
             </section>
 
             {/* Intérêts */}
             <section>
-              <p className="section-label mb-6">Intérêts</p>
+              <p className="font-mono text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[var(--color-dark)]/40 mb-5">
+                Intérêts
+              </p>
               <div className="flex flex-wrap gap-2">
-                {["Sport", "Musique", "Jeux vidéo"].map(i => (
-                  <span key={i} className="px-4 py-2 rounded-full bg-[var(--color-dark)] text-white text-[0.78rem] font-medium">
-                    {i}
+                {["Sport", "Musique", "Jeux vidéo"].map(item => (
+                  <span key={item} className="px-3.5 py-1.5 rounded-full bg-[var(--color-dark)] text-white text-[0.75rem] font-medium">
+                    {item}
                   </span>
                 ))}
               </div>
             </section>
 
-            {/* Contact rapide */}
-            <section className="rounded-2xl bg-[var(--color-dark)] p-6 text-white">
-              <p className="section-label text-white/30 mb-4">Contact</p>
-              <a href="mailto:andrekimgbaguidi01@gmail.com" className="block text-[0.8rem] text-white/60 hover:text-white no-underline transition-colors mb-2">
-                andrekimgbaguidi01@gmail.com
-              </a>
-              <p className="text-[0.8rem] text-white/40">+229 0166337219</p>
-              <a href="/#contact" className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-full bg-[var(--color-red)] text-white text-[0.8rem] font-medium no-underline hover:opacity-90 transition-opacity">
-                Me contacter
-              </a>
-            </section>
-
           </aside>
         </div>
+
       </main>
       <Footer />
     </>

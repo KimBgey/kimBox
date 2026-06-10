@@ -14,9 +14,9 @@ const DEV_TOOLS = [
 
 export default function StackSection() {
   return (
-    <section id="stack" className="bg-[var(--color-dark)] py-24 md:py-32 overflow-hidden">
+    <section id="stack" className="bg-[var(--color-dark)] py-16 md:py-24 overflow-hidden">
       <div className="px-5 md:px-10 lg:px-20 mb-12 md:mb-16">
-        <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-white">
+        <h2 className="font-display text-[clamp(2rem,3.5vw,3rem)] leading-[0.95] tracking-[-0.02em] text-white">
           Mes outils
         </h2>
       </div>

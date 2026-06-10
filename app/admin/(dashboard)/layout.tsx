@@ -11,7 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-[#f4f3f0]">
       <AdminSidebar />
-      <main className="flex-1 min-w-0 p-5 md:p-8">
+      <main className="flex-1 min-w-0 px-4 pt-[69px] pb-8 md:px-8 md:pt-[69px] lg:pt-8 lg:px-10">
         {children}
       </main>
       <Toaster

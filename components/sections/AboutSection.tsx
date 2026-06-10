@@ -58,7 +58,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" className="bg-[var(--color-dark)] text-white py-24 md:py-32 px-5 md:px-10 lg:px-20 overflow-hidden">
+    <section ref={sectionRef} id="about" className="bg-[var(--color-dark)] text-white py-16 md:py-24 px-5 md:px-10 lg:px-20 overflow-hidden">
 
       {/* Label */}
       <p className="section-label text-white/40 mb-8 md:mb-12">À propos</p>
@@ -66,17 +66,17 @@ export default function AboutSection() {
       {/* Manifeste */}
       <div className="manifeste-block mb-16 md:mb-24 max-w-4xl">
         <div className="clip-reveal">
-          <p className="manifeste-line font-display text-[clamp(2rem,5.5vw,4.5rem)] leading-[1.1] tracking-[-0.02em]">
+          <p className="manifeste-line font-display text-[clamp(2rem,3.5vw,3rem)] leading-[1.1] tracking-[-0.02em]">
             Je design ce que
           </p>
         </div>
         <div className="clip-reveal">
-          <p className="manifeste-line font-display text-[clamp(2rem,5.5vw,4.5rem)] leading-[1.1] tracking-[-0.02em] text-[var(--color-red)]">
+          <p className="manifeste-line font-display text-[clamp(2rem,3.5vw,3rem)] leading-[1.1] tracking-[-0.02em] text-[var(--color-red)]">
             les autres imaginent.
           </p>
         </div>
         <div className="clip-reveal">
-          <p className="manifeste-line font-display text-[clamp(2rem,5.5vw,4.5rem)] leading-[1.1] tracking-[-0.02em] text-white/50">
+          <p className="manifeste-line font-display text-[clamp(2rem,3.5vw,3rem)] leading-[1.1] tracking-[-0.02em] text-white/50">
             Je code ce qu&apos;ils dessinent.
           </p>
         </div>

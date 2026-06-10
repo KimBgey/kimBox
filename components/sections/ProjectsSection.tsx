@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -22,12 +22,16 @@ const PLACEHOLDER_PROJECTS: Omit<Project, "createdAt">[] = [
 ];
 
 const CATEGORY_LABEL: Record<string, string> = { design: "Design", dev: "Dev", both: "Design + Dev" };
-const CARD_SIZES = ["lg:col-span-2 lg:row-span-2", "lg:col-span-1", "lg:col-span-1", "lg:col-span-1", "lg:col-span-1", "lg:col-span-2"];
-const CARD_COLORS = ["#1a1a1a", "#D43333", "#2a2a2a", "#8B7355", "#1a1a1a", "#D43333"];
+const CARD_COLORS = ["#1a1a1a", "#D43333", "#2a2a2a", "#8B7355", "#1e1e2e", "#B83232"];
 
 export default function ProjectsSection({ projects = PLACEHOLDER_PROJECTS }: { projects?: typeof PLACEHOLDER_PROJECTS }) {
   const [filter, setFilter] = useState<Filter>("Tous");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStart = useRef(0);
 
   const visible = filter === "Tous"
     ? projects
@@ -36,109 +40,237 @@ export default function ProjectsSection({ projects = PLACEHOLDER_PROJECTS }: { p
         : p.category === "dev" || p.category === "both"
       );
 
+  /* ── Tracking de la card active ── */
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const center = el.scrollLeft + el.clientWidth / 2;
+      const cards = el.querySelectorAll<HTMLElement>(".project-slide");
+      let closest = 0, minDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      setActiveIndex(closest);
+    };
+
+    el.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => el.removeEventListener("scroll", update);
+  }, [visible.length]);
+
+  /* ── Scroll vers une card ── */
+  const scrollTo = useCallback((index: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll<HTMLElement>(".project-slide");
+    const card = cards[index];
+    if (!card) return;
+    const target = card.offsetLeft - (el.clientWidth - card.offsetWidth) / 2;
+    el.scrollTo({ left: target, behavior: "smooth" });
+  }, []);
+
+  /* ── Drag to scroll (desktop) ── */
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startX.current = e.pageX;
+    scrollStart.current = scrollRef.current!.scrollLeft;
+  };
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    scrollRef.current.scrollLeft = scrollStart.current - (e.pageX - startX.current) * 1.4;
+  }, []);
+
+  const onMouseUp = useCallback(() => { isDragging.current = false; }, []);
+
+  /* ── Animation section entrée ── */
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".project-card", {
-        opacity: 0, y: 36, scale: 0.97,
-        duration: 0.7, stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ".projects-grid", start: "top 80%", once: true },
+      gsap.from(".projects-header", {
+        opacity: 0, y: 20, duration: 0.6, ease: "power3.out",
+        scrollTrigger: { trigger: ".projects-header", start: "top 88%", once: true },
+      });
+      gsap.from(".projects-carousel", {
+        opacity: 0, y: 36, duration: 0.75, ease: "power3.out",
+        scrollTrigger: { trigger: ".projects-carousel", start: "top 90%", once: true },
       });
     }, sectionRef);
     return () => ctx.revert();
-  }, [filter]);
+  }, []);
 
   return (
-    <div ref={sectionRef} id="projects" className="bg-[var(--color-cream)] py-24 md:py-32 px-5 md:px-10 lg:px-20">
+    <div ref={sectionRef} id="projects" className="bg-[var(--color-cream)] py-16 md:py-24 overflow-hidden">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 md:mb-14">
+      {/* ── Header ── */}
+      <div className="projects-header px-5 md:px-10 lg:px-20 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 md:mb-12">
         <div>
-          <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)]">
+          <p className="section-label text-[var(--color-dark)]/40 mb-3">Projets</p>
+          <h2 className="font-display text-[clamp(2rem,3.5vw,3rem)] leading-[0.95] tracking-[-0.02em] text-[var(--color-dark)]">
             Travaux récents
           </h2>
         </div>
 
-        {/* Filtres */}
-        <div className="flex gap-2 flex-wrap">
-          {FILTERS.map(f => (
+        <div className="flex items-center gap-5">
+          {/* Filtres */}
+          <div className="flex gap-2">
+            {FILTERS.map(f => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => { setFilter(f); setActiveIndex(0); }}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
+                  filter === f
+                    ? "bg-[var(--color-dark)] text-white border-[var(--color-dark)]"
+                    : "bg-transparent text-[var(--color-dark)] border-[var(--color-dark)]/20 hover:border-[var(--color-dark)]/60"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
+          {/* Nav arrows */}
+          <div className="hidden md:flex gap-2">
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-5 py-2 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
-                filter === f
-                  ? "bg-[var(--color-dark)] text-white border-[var(--color-dark)]"
-                  : "bg-transparent text-[var(--color-dark)] border-[var(--color-dark)]/20 hover:border-[var(--color-dark)]/60"
-              }`}
+              type="button"
+              aria-label="Projet précédent"
+              onClick={() => scrollTo(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              className="w-9 h-9 rounded-full border border-[var(--color-dark)]/15 flex items-center justify-center text-[var(--color-dark)]/40 hover:border-[var(--color-dark)]/40 hover:text-[var(--color-dark)] disabled:opacity-20 transition-all cursor-pointer disabled:cursor-not-allowed"
             >
-              {f}
+              <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+                <path d="M11.5 1.5L1.5 11.5M1.5 11.5H8.5M1.5 11.5V4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
-          ))}
+            <button
+              type="button"
+              aria-label="Projet suivant"
+              onClick={() => scrollTo(activeIndex + 1)}
+              disabled={activeIndex === visible.length - 1}
+              className="w-9 h-9 rounded-full border border-[var(--color-dark)]/15 flex items-center justify-center text-[var(--color-dark)]/40 hover:border-[var(--color-dark)]/40 hover:text-[var(--color-dark)] disabled:opacity-20 transition-all cursor-pointer disabled:cursor-not-allowed"
+            >
+              <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+                <path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Grille magazine */}
-      <div className="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[240px] md:auto-rows-[280px] gap-4">
-        {visible.map((project, i) => (
-          <Link
-            key={project.id}
-            href={`/projects/${project.slug}`}
-            className={`project-card group relative rounded-2xl overflow-hidden no-underline ${CARD_SIZES[i % CARD_SIZES.length]}`}
-          >
-            {/* Background */}
-            <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
-              style={{ backgroundColor: CARD_COLORS[i % CARD_COLORS.length] }}>
+      {/* ── Carousel ── */}
+      <div
+        ref={scrollRef}
+        className="projects-carousel carousel-padding flex gap-4 md:gap-5 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden select-none cursor-grab active:cursor-grabbing"
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+      >
+        {visible.map((project, i) => {
+          const distance = Math.abs(i - activeIndex);
+          const isActive = distance === 0;
+          const isAdjacent = distance === 1;
+
+          return (
+            <Link
+              key={project.id}
+              href={`/projects/${project.slug}`}
+              draggable={false}
+              className={`project-slide flex-shrink-0 snap-center relative rounded-3xl overflow-hidden no-underline
+                w-[76vw] md:w-[310px] h-[420px] md:h-[440px]
+                transition-all duration-500 ease-out
+                ${isActive ? "scale-100 opacity-100" : isAdjacent ? "scale-[0.92] opacity-60" : "scale-[0.85] opacity-35"}
+              `}
+            >
+              {/* Fond couleur */}
+              <div className="absolute inset-0" style={{ backgroundColor: CARD_COLORS[i % CARD_COLORS.length] }} />
+
+              {/* Image projet */}
               {(project.images as string[])?.[0] && (
                 <Image
                   src={(project.images as string[])[0]}
                   alt={project.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  draggable={false}
+                  sizes="(max-width: 768px) 76vw, 310px"
                 />
               )}
-            </div>
-            {/* Overlay sombre pour lisibilité quand image présente */}
-            {(project.images as string[])?.[0] && (
-              <div className="absolute inset-0 bg-black/40" />
-            )}
 
-            {/* Numéro de parution */}
-            <span className="absolute top-4 left-5 section-label text-white/30">
-              N°{String(i + 1).padStart(2, "0")}
-            </span>
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
 
-            {/* Catégorie */}
-            <span className="absolute top-4 right-5 text-[0.7rem] px-3 py-1 rounded-full bg-white/10 text-white font-medium tracking-wide">
-              {CATEGORY_LABEL[project.category]}
-            </span>
+              {/* Badge catégorie — haut gauche */}
+              <div className="absolute top-4 left-4">
+                <span className="font-mono text-[0.6rem] uppercase tracking-widest text-white/50">
+                  {CATEGORY_LABEL[project.category]}
+                </span>
+              </div>
 
-            {/* Contenu bas */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/60 to-transparent">
-              <h3 className="font-display text-xl md:text-2xl text-white leading-tight mb-1">
-                {project.title}
-              </h3>
-              <p className="text-white/60 text-sm leading-snug line-clamp-2">
-                {project.description}
-              </p>
-            </div>
+              {/* Numéro — haut droite */}
+              <span className="absolute top-4 right-4 font-display text-[2.5rem] leading-none text-white/[0.07] select-none">
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
-            {/* Hover arrow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[var(--color-red)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <svg width="16" height="16" viewBox="0 0 13 13" fill="none">
-                <path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-          </Link>
+              {/* Contenu bas */}
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="font-display text-[1.5rem] leading-tight text-white mb-3">
+                  {project.title}
+                </h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1.5 flex-wrap">
+                    {(project.tools as string[]).slice(0, 2).map(tool => (
+                      <span
+                        key={tool}
+                        className="text-[0.62rem] px-2 py-0.5 rounded-full bg-white/10 text-white/55 font-medium"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 hover:bg-[var(--color-red)] transition-colors">
+                    <svg width="10" height="10" viewBox="0 0 13 13" fill="none">
+                      <path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* ── Dots ── */}
+      <div className="flex justify-center items-center gap-1.5 mt-6">
+        {visible.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Aller au projet ${i + 1}`}
+            onClick={() => scrollTo(i)}
+            className={`rounded-full transition-all duration-300 cursor-pointer ${
+              i === activeIndex
+                ? "w-5 h-[5px] bg-[var(--color-dark)]"
+                : "w-[5px] h-[5px] bg-[var(--color-dark)]/20 hover:bg-[var(--color-dark)]/40"
+            }`}
+          />
         ))}
       </div>
 
-      {/* CTA voir tous */}
-      <div className="mt-10 text-center">
-        <Link href="/projects"
-          className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-[var(--color-dark)]/20 text-sm font-medium text-[var(--color-dark)] no-underline hover:bg-[var(--color-dark)] hover:text-white transition-colors">
+      {/* ── CTA ── */}
+      <div className="mt-10 text-center px-5">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-[var(--color-dark)]/20 text-sm font-medium text-[var(--color-dark)] no-underline hover:bg-[var(--color-dark)] hover:text-white transition-colors"
+        >
           Voir tous les projets
-          <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+            <path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Link>
       </div>
     </div>
