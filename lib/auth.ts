@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -15,13 +16,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!email || !password) return null;
 
         const adminEmail = (process.env.ADMIN_EMAIL ?? "").trim();
-        const adminPassword = (process.env.ADMIN_PASSWORD ?? "").trim();
+        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH ?? "";
 
-        if (email === adminEmail && password === adminPassword) {
-          return { id: "1", email, name: "André Kim" };
-        }
+        if (!adminPasswordHash || email !== adminEmail) return null;
 
-        return null;
+        const valid = await bcrypt.compare(password, adminPasswordHash);
+        if (!valid) return null;
+
+        return { id: "1", email, name: "André Kim" };
       },
     }),
   ],

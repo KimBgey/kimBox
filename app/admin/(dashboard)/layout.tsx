@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { Toaster } from "sonner";
 
@@ -7,7 +9,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!session) redirect("/admin/login");
+
   return (
     <div className="flex min-h-screen bg-[#f4f3f0]">
       <AdminSidebar />

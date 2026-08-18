@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { projects } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
+import { projectSchema, firstIssueMessage } from "@/lib/validations";
 
 function slugify(str: string) {
   return str
@@ -19,6 +21,7 @@ function parseArray(val: string): string[] {
 }
 
 export async function createProject(formData: FormData): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     const title = formData.get("title") as string;
     const slug = formData.get("slug") as string || slugify(title);
@@ -32,12 +35,15 @@ export async function createProject(formData: FormData): Promise<{ error?: strin
       github: (formData.get("link_github") as string) || undefined,
     };
     const featured = formData.get("featured") === "on";
-    const order = parseInt(formData.get("order") as string || "0", 10);
+    const order = parseInt(formData.get("order") as string || "0", 10) || 0;
 
     const imagesRaw = formData.get("images") as string | null;
     const images: string[] = imagesRaw ? JSON.parse(imagesRaw) : [];
 
-    await db.insert(projects).values({ title, slug, category, description, caseStudy, tools, links, featured, order, images });
+    const parsed = projectSchema.safeParse({ title, slug, category, description, caseStudy, tools, links, featured, order, images });
+    if (!parsed.success) return { error: firstIssueMessage(parsed.error) };
+
+    await db.insert(projects).values(parsed.data);
     revalidatePath("/admin/projects");
     revalidatePath("/");
     return {};
@@ -47,6 +53,7 @@ export async function createProject(formData: FormData): Promise<{ error?: strin
 }
 
 export async function updateProject(id: number, formData: FormData): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     const title = formData.get("title") as string;
     const slug = formData.get("slug") as string || slugify(title);
@@ -60,12 +67,15 @@ export async function updateProject(id: number, formData: FormData): Promise<{ e
       github: (formData.get("link_github") as string) || undefined,
     };
     const featured = formData.get("featured") === "on";
-    const order = parseInt(formData.get("order") as string || "0", 10);
+    const order = parseInt(formData.get("order") as string || "0", 10) || 0;
 
     const imagesRaw = formData.get("images") as string | null;
     const images: string[] = imagesRaw ? JSON.parse(imagesRaw) : [];
 
-    await db.update(projects).set({ title, slug, category, description, caseStudy, tools, links, featured, order, images }).where(eq(projects.id, id));
+    const parsed = projectSchema.safeParse({ title, slug, category, description, caseStudy, tools, links, featured, order, images });
+    if (!parsed.success) return { error: firstIssueMessage(parsed.error) };
+
+    await db.update(projects).set(parsed.data).where(eq(projects.id, id));
     revalidatePath("/admin/projects");
     revalidatePath("/");
     return {};
@@ -75,6 +85,7 @@ export async function updateProject(id: number, formData: FormData): Promise<{ e
 }
 
 export async function deleteProject(id: number): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     await db.delete(projects).where(eq(projects.id, id));
     revalidatePath("/admin/projects");

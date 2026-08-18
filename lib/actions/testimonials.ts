@@ -4,8 +4,11 @@ import { db } from "@/lib/db";
 import { testimonials } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
+import { testimonialSchema, firstIssueMessage } from "@/lib/validations";
 
 export async function createTestimonial(formData: FormData): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     const author = formData.get("author") as string;
     const role = (formData.get("role") as string) || null;
@@ -14,7 +17,10 @@ export async function createTestimonial(formData: FormData): Promise<{ error?: s
     const projectId = projectIdRaw ? parseInt(projectIdRaw, 10) : null;
     const visible = formData.get("visible") === "on";
 
-    await db.insert(testimonials).values({ author, role, text, projectId, visible });
+    const parsed = testimonialSchema.safeParse({ author, role, text, projectId, visible });
+    if (!parsed.success) return { error: firstIssueMessage(parsed.error) };
+
+    await db.insert(testimonials).values(parsed.data);
     revalidatePath("/admin/testimonials");
     revalidatePath("/");
     return {};
@@ -24,6 +30,7 @@ export async function createTestimonial(formData: FormData): Promise<{ error?: s
 }
 
 export async function updateTestimonial(id: number, formData: FormData): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     const author = formData.get("author") as string;
     const role = (formData.get("role") as string) || null;
@@ -32,7 +39,10 @@ export async function updateTestimonial(id: number, formData: FormData): Promise
     const projectId = projectIdRaw ? parseInt(projectIdRaw, 10) : null;
     const visible = formData.get("visible") === "on";
 
-    await db.update(testimonials).set({ author, role, text, projectId, visible }).where(eq(testimonials.id, id));
+    const parsed = testimonialSchema.safeParse({ author, role, text, projectId, visible });
+    if (!parsed.success) return { error: firstIssueMessage(parsed.error) };
+
+    await db.update(testimonials).set(parsed.data).where(eq(testimonials.id, id));
     revalidatePath("/admin/testimonials");
     revalidatePath("/");
     return {};
@@ -42,6 +52,7 @@ export async function updateTestimonial(id: number, formData: FormData): Promise
 }
 
 export async function deleteTestimonial(id: number): Promise<{ error?: string }> {
+  if (!(await auth())) return { error: "Non autorisé" };
   try {
     await db.delete(testimonials).where(eq(testimonials.id, id));
     revalidatePath("/admin/testimonials");
