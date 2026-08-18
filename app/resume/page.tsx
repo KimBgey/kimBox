@@ -17,20 +17,19 @@ const experiences = [
     current: true,
   },
   {
-    period: "12/2025 – Aujourd'hui",
-    company: "HASIMEX SARL",
-    location: "Cotonou (Remote)",
-    role: "Graphiste",
-    desc: "Réalisation de visuels d'impression, mise en place de mockups de présentation et de prospection. Gestion de bons de commande et pro-formas.",
-    current: true,
-  },
-  {
     period: "01/2022 – Aujourd'hui",
     company: "Freelance",
     location: "Abomey Calavi",
     role: "Designer Graphiste",
     desc: "Réalisation d'affiches publicitaires et d'identités visuelles pour sites web.",
     current: true,
+  },
+  {
+    period: "12/2025 – 07/2026",
+    company: "HASIMEX SARL",
+    location: "Cotonou (Remote)",
+    role: "Graphiste",
+    desc: "Réalisation de visuels d'impression, mise en place de mockups de présentation et de prospection. Gestion de bons de commande et pro-formas.",
   },
   {
     period: "02/2026 – 03/2026",
