@@ -18,10 +18,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const adminEmail = (process.env.ADMIN_EMAIL ?? "").trim();
         const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH ?? "";
 
-        if (!adminPasswordHash || email !== adminEmail) return null;
+        if (!adminEmail || !adminPasswordHash) {
+          console.error("[auth] Admin auth configuration missing", {
+            adminEmailConfigured: Boolean(adminEmail),
+            adminPasswordHashConfigured: Boolean(adminPasswordHash),
+          });
+          return null;
+        }
 
-        const valid = await bcrypt.compare(password, adminPasswordHash);
-        if (!valid) return null;
+        if (email !== adminEmail) {
+          console.warn("[auth] Admin sign-in rejected: ADMIN_EMAIL mismatch");
+          return null;
+        }
+
+        let valid: boolean;
+        try {
+          valid = await bcrypt.compare(password, adminPasswordHash);
+        } catch {
+          console.error("[auth] ADMIN_PASSWORD_HASH is invalid");
+          return null;
+        }
+        if (!valid) {
+          console.warn("[auth] Admin sign-in rejected: password does not match configured hash");
+          return null;
+        }
 
         return { id: "1", email, name: "André Kim" };
       },
